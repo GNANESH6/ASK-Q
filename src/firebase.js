@@ -1,3 +1,5 @@
+// src/firebase.js
+
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import {
@@ -7,27 +9,34 @@ import {
 } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
+/**
+ * Firebase configuration
+ * ⚠️ Uses environment variables (REACT_APP_*)
+ * Works for:
+ * - Local development
+ * - Vercel production
+ */
 const firebaseConfig = {
-  apiKey: "AIzaSyCpxO90qMksFctracaKd23uTSxUOszg0mA",
-  authDomain: "q-hive-17116.firebaseapp.com",
-  projectId: "q-hive-17116",
-  storageBucket: "q-hive-17116.appspot.com",
-  messagingSenderId: "70781620264",
-  appId: "1:70781620264:web:4d88565413fcb521f6651d"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID
 };
 
-// Initialize Firebase app
+// Initialize Firebase App
 const app = initializeApp(firebaseConfig);
 
-// Auth
+// Firebase Authentication
 export const auth = getAuth(app);
 
-// ✅ Firestore with offline persistence (NEW WAY)
+// Firestore with offline persistence (single tab)
 export const db = initializeFirestore(app, {
   localCache: persistentLocalCache({
     tabManager: persistentSingleTabManager()
   })
 });
 
-// Storage
+// Firebase Storage
 export const storage = getStorage(app);
