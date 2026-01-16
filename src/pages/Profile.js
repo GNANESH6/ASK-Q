@@ -107,6 +107,40 @@ function Profile() {
     setLoading(false);
   };
 
+  /* ================= DELETE PROFILE PIC ================= */
+  const handleDeletePic = async () => {
+    if (!user) return toast.error("Login required");
+
+    const toastId = toast.loading("Removing profile picture...");
+    setLoading(true);
+
+    try {
+      await updateDoc(doc(db, "users", user.uid), {
+        profilePic: ""
+      });
+
+      setProfilePic("");
+      setFile(null);
+
+      toast.update(toastId, {
+        render: "Profile picture removed ❌",
+        type: "success",
+        isLoading: false,
+        autoClose: 2500
+      });
+
+    } catch (err) {
+      toast.update(toastId, {
+        render: "Failed to remove picture ❌",
+        type: "error",
+        isLoading: false,
+        autoClose: 3000
+      });
+    }
+
+    setLoading(false);
+  };
+
   /* ================= UPDATE PASSWORD ================= */
   const updatePasswordHandler = async () => {
     if (!currentPass.trim() || !newPass.trim())
@@ -118,7 +152,6 @@ function Profile() {
     setLoading(true);
 
     try {
-      // Re-authenticate
       const credential = EmailAuthProvider.credential(
         user.email,
         currentPass
@@ -126,7 +159,6 @@ function Profile() {
 
       await reauthenticateWithCredential(user, credential);
 
-      // Update password
       await updatePassword(user, newPass);
 
       toast.update(toastId, {
@@ -157,18 +189,38 @@ function Profile() {
         <h2>My Profile</h2>
 
         {profilePic && (
-          <img
-            src={profilePic}
-            alt="profile"
-            style={{
-              width: "120px",
-              height: "120px",
-              borderRadius: "50%",
-              objectFit: "cover",
-              margin: "0 auto 20px",
-              display: "block"
-            }}
-          />
+          <>
+            <img
+              src={profilePic}
+              alt="profile"
+              style={{
+                width: "120px",
+                height: "120px",
+                borderRadius: "50%",
+                objectFit: "cover",
+                margin: "0 auto 20px",
+                display: "block"
+              }}
+            />
+
+            <button
+              onClick={handleDeletePic}
+              style={{
+                background: "red",
+                color: "white",
+                padding: "8px 15px",
+                borderRadius: "6px",
+                border: "none",
+                cursor: "pointer",
+                marginBottom: "20px",
+                display: "block",
+                marginLeft: "auto",
+                marginRight: "auto"
+              }}
+            >
+              Delete Profile Picture
+            </button>
+          </>
         )}
 
         <input
@@ -193,14 +245,17 @@ function Profile() {
           onChange={e => setYear(e.target.value)}
         />
 
-       {/* PROFILE PIC UPLOAD
-        <input  type="file" placeholder="PROFILE PIC" onChange={(e) => setFile(e.target.files[0])} /> <h6> choose file for profile Pic</h6> */}
+        <input
+          type="file"
+          placeholder="PROFILE PIC"
+          onChange={(e) => setFile(e.target.files[0])}
+        />
+        <h6>Choose file for profile Pic</h6>
 
         <button onClick={handleUpdate} disabled={loading}>
           {loading ? "Updating..." : "Update Profile"}
         </button>
 
-        {/* ================= CHANGE PASSWORD ================= */}
         <h3 style={{ marginTop: "30px" }}>Change Password</h3>
 
         <input
