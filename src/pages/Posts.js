@@ -49,7 +49,7 @@ function Posts() {
     }
   };
 
-  /* LIKES */
+  /* LIKE */
   const toggleLike = async (postId) => {
     if (!user) return toast.error("Login required");
 
@@ -74,7 +74,10 @@ function Posts() {
   const fetchComments = async (postId) => {
     const q = query(collection(db, "comments"), where("postId", "==", postId));
     const snap = await getDocs(q);
-    setComments((p) => ({ ...p, [postId]: snap.docs.map(d => d.data()) }));
+    setComments((p) => ({
+      ...p,
+      [postId]: snap.docs.map((d) => d.data())
+    }));
   };
 
   const addComment = async (postId) => {
@@ -87,11 +90,11 @@ function Posts() {
       createdAt: serverTimestamp()
     });
 
-    setNewComment(p => ({ ...p, [postId]: "" }));
+    setNewComment((p) => ({ ...p, [postId]: "" }));
     fetchComments(postId);
   };
 
-  /* POSTS */
+  /* LOAD POSTS */
   const fetchAllPosts = useCallback(async () => {
     const snap = await getDocs(collection(db, "posts"));
     const list = [];
@@ -112,7 +115,8 @@ function Posts() {
     list.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
     setPosts(list);
     setFilteredPosts(list);
-    list.forEach(p => fetchComments(p.id));
+
+    list.forEach((p) => fetchComments(p.id));
   }, []);
 
   useEffect(() => {
@@ -122,14 +126,14 @@ function Posts() {
   /* FILTER */
   useEffect(() => {
     let u = [...posts];
-    if (branchFilter !== "All") u = u.filter(p => p.userBranch === branchFilter);
-    if (yearFilter !== "All") u = u.filter(p => String(p.userYear) === yearFilter);
-    if (searchText) {
-      u = u.filter(p =>
-        p.title.toLowerCase().includes(searchText.toLowerCase()) ||
-        p.description.toLowerCase().includes(searchText.toLowerCase())
+    if (branchFilter !== "All") u = u.filter((p) => p.userBranch === branchFilter);
+    if (yearFilter !== "All") u = u.filter((p) => String(p.userYear) === yearFilter);
+    if (searchText)
+      u = u.filter(
+        (p) =>
+          p.title.toLowerCase().includes(searchText.toLowerCase()) ||
+          p.description.toLowerCase().includes(searchText.toLowerCase())
       );
-    }
     setFilteredPosts(u);
   }, [branchFilter, yearFilter, searchText, posts]);
 
@@ -144,8 +148,9 @@ function Posts() {
       }
 
       await deleteDoc(doc(db, "posts", postId));
-      setPosts(p => p.filter(x => x.id !== postId));
-      setFilteredPosts(p => p.filter(x => x.id !== postId));
+
+      setPosts((p) => p.filter((x) => x.id !== postId));
+      setFilteredPosts((p) => p.filter((x) => x.id !== postId));
 
       toast.success("Post deleted ✔️");
     } catch {
@@ -157,8 +162,9 @@ function Posts() {
     <div className="posts-container">
       <h2>All Posts</h2>
 
+      {/* FILTER BAR */}
       <div className="filter-bar">
-        <select className="filter-select" value={branchFilter} onChange={e => setBranchFilter(e.target.value)}>
+        <select className="filter-select" value={branchFilter} onChange={(e) => setBranchFilter(e.target.value)}>
           <option value="All">All Branches</option>
           <option value="CSE">CSE</option>
           <option value="ECE">ECE</option>
@@ -169,7 +175,7 @@ function Posts() {
           <option value="CIVIL">CIVIL</option>
         </select>
 
-        <select className="filter-select" value={yearFilter} onChange={e => setYearFilter(e.target.value)}>
+        <select className="filter-select" value={yearFilter} onChange={(e) => setYearFilter(e.target.value)}>
           <option value="All">All Years</option>
           <option value="1">1st Year</option>
           <option value="2">2nd Year</option>
@@ -177,44 +183,89 @@ function Posts() {
           <option value="4">4th Year</option>
         </select>
 
-        <input className="filter-input" placeholder="Search..." value={searchText} onChange={e => setSearchText(e.target.value)} />
+        <input
+          className="filter-input"
+          placeholder="Search..."
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+        />
       </div>
 
-      {filteredPosts.map(post => (
+      {/* POSTS */}
+      {filteredPosts.map((post) => (
         <div className="post-card" key={post.id}>
           <h3>{post.title}</h3>
           <p>{post.description}</p>
-          <p><strong>{post.userBranch}</strong> | Year {post.userYear}</p>
+          <p >
+            <strong>{post.userBranch}</strong> | Year {post.userYear}
+          </p>
 
-          {post.fileType?.startsWith("image") && <img src={post.fileUrl} alt="" />}
-          {post.fileType?.startsWith("video") && <video src={post.fileUrl} controls />}
-          {post.fileType === "application/pdf" && <a href={post.fileUrl} target="_blank">📄 View PDF</a>}
+          {/* IMAGE */}
+          {post.fileType?.startsWith("image") && <img src={post.fileUrl} alt="" />} 
 
+          {/* VIDEO - FIXED */}
+          {post.fileType?.startsWith("video") && (
+            <div className="video-wrapper">
+              <video src={post.fileUrl} controls preload="metadata" /> 
+            </div> 
+          ) } 
+
+          {/* PDF */}
+          {post.fileType === "application/pdf" && (
+            <div>
+              <a href={post.fileUrl} target="_blank" rel="noreferrer">
+                📄 View PDF
+              </a>
+              <br />
+              <a href={post.fileUrl} download>
+                ⬇️ Download PDF
+              </a>
+            </div>
+          )}
+
+          {/* TXT FILE */}
           {post.fileType === "text/plain" && (
             <>
-              <button onClick={() => loadTextFile(post.id, post.fileUrl)}>📃 View Text</button> &nbsp;
-              <a href={post.fileUrl} download>⬇️ Download TXT</a>
-              {textPreview[post.id] && <pre>{textPreview[post.id]}</pre>}
+              <button onClick={() => loadTextFile(post.id, post.fileUrl)}>📃 View Text</button>
+              <a href={post.fileUrl} download>⬇️ Download TXT</a> 
+
+              {textPreview[post.id] && (
+                <pre className="text-preview-box">{textPreview[post.id]}</pre>
+              )}
             </>
           )}
 
+          {/* OTHER FILE TYPES */}
           {!post.fileType?.startsWith("image") &&
-           !post.fileType?.startsWith("video") &&
-           post.fileType !== "application/pdf" &&
-           post.fileType !== "text/plain" &&
-           post.fileUrl && <a href={post.fileUrl} download>⬇️ Download File</a>}
+            !post.fileType?.startsWith("video") &&
+            post.fileType !== "application/pdf" &&
+            post.fileType !== "text/plain" &&
+            post.fileUrl && <a href={post.fileUrl} download>⬇️ Download File</a>} <br></br> <br></br>
 
-          <div style={{ marginTop: 10 }}>
+          {/* LIKE + DELETE */}
+          <div className="post-actions">
             <button onClick={() => toggleLike(post.id)}>❤️ {likes[post.id] || 0}</button>
-            {user?.uid === post.userId && <button className="delete-btn" onClick={() => deletePost(post.id, post.fileUrl)}>Delete</button>}
+
+            {user?.uid === post.userId && (
+              <button className="delete-btn" onClick={() => deletePost(post.id, post.fileUrl)}>
+                Delete
+              </button>
+            )}
           </div>
 
+          {/* COMMENTS */}
           <div className="comment-box">
-            <input value={newComment[post.id] || ""} onChange={e => setNewComment(p => ({ ...p, [post.id]: e.target.value }))} />
+            <input
+              placeholder="comment.."
+              value={newComment[post.id] || ""}
+              onChange={(e) => setNewComment((p) => ({ ...p, [post.id]: e.target.value }))}
+            />
             <button onClick={() => addComment(post.id)}>Send</button>
           </div>
 
-          {comments[post.id]?.map((c, i) => <p key={i}>💬 {c.text}</p>)}
+          {comments[post.id]?.map((c, i) => (
+            <p key={i}>💬 {c.text}</p>
+          ))}
         </div>
       ))}
     </div>

@@ -1,6 +1,17 @@
 import { useEffect, useState } from "react";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
+import {
+  doc,
+  getDoc,
+  updateDoc
+} from "firebase/firestore";
+
+import {
+  getAuth,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
+  updatePassword
+} from "firebase/auth";
+
 import { db } from "../firebase";
 import { toast } from "react-toastify";
 
@@ -17,6 +28,10 @@ function Profile() {
   const [profilePic, setProfilePic] = useState("");
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  // Password states
+  const [currentPass, setCurrentPass] = useState("");
+  const [newPass, setNewPass] = useState("");
 
   /* ================= FETCH PROFILE ================= */
   useEffect(() => {
@@ -44,10 +59,7 @@ function Profile() {
 
   /* ================= UPDATE PROFILE ================= */
   const handleUpdate = async () => {
-    if (!user) {
-      toast.error("You must be logged in");
-      return;
-    }
+    if (!user) return toast.error("You must be logged in");
 
     setLoading(true);
     const toastId = toast.loading("Updating profile...");
@@ -55,7 +67,6 @@ function Profile() {
     try {
       let imageUrl = profilePic;
 
-      // Upload new profile picture
       if (file) {
         const formData = new FormData();
         formData.append("file", file);
@@ -85,9 +96,8 @@ function Profile() {
       });
 
     } catch (err) {
-      console.error(err);
       toast.update(toastId, {
-        render: "Failed to update profile ❌",
+        render: "Profile update failed ❌",
         type: "error",
         isLoading: false,
         autoClose: 3000
@@ -97,7 +107,50 @@ function Profile() {
     setLoading(false);
   };
 
-  /* ================= UI ================= */
+  /* ================= UPDATE PASSWORD ================= */
+  const updatePasswordHandler = async () => {
+    if (!currentPass.trim() || !newPass.trim())
+      return toast.error("Enter both password fields");
+
+    if (!user) return toast.error("Login required");
+
+    const toastId = toast.loading("Updating password...");
+    setLoading(true);
+
+    try {
+      // Re-authenticate
+      const credential = EmailAuthProvider.credential(
+        user.email,
+        currentPass
+      );
+
+      await reauthenticateWithCredential(user, credential);
+
+      // Update password
+      await updatePassword(user, newPass);
+
+      toast.update(toastId, {
+        render: "Password updated successfully 🔐",
+        type: "success",
+        isLoading: false,
+        autoClose: 2500
+      });
+
+      setCurrentPass("");
+      setNewPass("");
+
+    } catch (err) {
+      toast.update(toastId, {
+        render: "Incorrect current password ❌",
+        type: "error",
+        isLoading: false,
+        autoClose: 3500
+      });
+    }
+
+    setLoading(false);
+  };
+
   return (
     <div className="container">
       <div className="card">
@@ -122,14 +175,14 @@ function Profile() {
           className="input"
           placeholder="Name"
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={e => setName(e.target.value)}
         />
 
         <input
           className="input"
           placeholder="Branch"
           value={branch}
-          onChange={(e) => setBranch(e.target.value)}
+          onChange={e => setBranch(e.target.value)}
         />
 
         <input
@@ -137,12 +190,39 @@ function Profile() {
           type="number"
           placeholder="Year"
           value={year}
-          onChange={(e) => setYear(e.target.value)}
+          onChange={e => setYear(e.target.value)}
         />
+
+        {/* PROFILE PIC UPLOAD */}
+        <input type="file" onChange={(e) => setFile(e.target.files[0])} />
 
         <button onClick={handleUpdate} disabled={loading}>
           {loading ? "Updating..." : "Update Profile"}
         </button>
+
+        {/* ================= CHANGE PASSWORD ================= */}
+        <h3 style={{ marginTop: "30px" }}>Change Password</h3>
+
+        <input
+          className="input"
+          type="password"
+          placeholder="Current Password"
+          value={currentPass}
+          onChange={(e) => setCurrentPass(e.target.value)}
+        />
+
+        <input
+          className="input"
+          type="password"
+          placeholder="New Password"
+          value={newPass}
+          onChange={(e) => setNewPass(e.target.value)}
+        />
+
+        <button onClick={updatePasswordHandler} disabled={loading}>
+          {loading ? "Updating..." : "Update Password"}
+        </button>
+
       </div>
     </div>
   );

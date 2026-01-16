@@ -186,7 +186,7 @@ button:disabled {
 /* ================= POSTS ================= */
 .posts-container {
   max-width: 900px;
-  margin: 40px auto;
+  margin: 30px auto;
   padding: 20px;
 
   display: flex;
@@ -200,8 +200,9 @@ button:disabled {
   background: #ffffff;
   border-radius: 14px;
   padding: 20px;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+
 
   animation: fadeIn 0.4s ease;
 }
@@ -279,6 +280,35 @@ button:disabled {
   .post-card {
     padding: 16px;
   }
+
+  /* ======== VIDEO FIX ========== */
+.video-wrapper {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 12px;
+  margin-top: 12px;
+  overflow: hidden;
+  background: #000;
+  margin-bottom: 10px;
+}
+
+.video-wrapper video {
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  border-radius: 12px;
+  object-fit: contain;
+  display: block;
+}
+
+/* Optional: TXT preview box */
+.text-preview-box {
+  background: #f7f7f7;
+  padding: 10px;
+  white-space: pre-wrap;
+  border-radius: 8px;
+  margin-top: 8px;
+}
 
 
 .filter-select, .filter-input {

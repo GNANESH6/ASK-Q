@@ -52,6 +52,13 @@ function Login() {
         <button onClick={handleLogin} disabled={loading}>
           {loading ? "Logging in..." : "Login"}
         </button>
+        <p
+  onClick={() => navigate("/forgot-password")}
+  style={{ color: "blue", cursor: "pointer", marginTop: "10px" }}
+>
+  Forgot Password?
+</p>
+
       </div>
     </div>
   );
