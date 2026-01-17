@@ -24,7 +24,7 @@ function Login() {
       toast.success("Login successful 🎉");
       navigate("/posts");
     } catch (error) {
-      toast.error(error.message);
+      toast.error("invalid mail or password");
     }
 
     setLoading(false);

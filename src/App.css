@@ -1,4 +1,6 @@
-/* ================= GLOBAL RESET ================= */
+/* =========================================================
+   GLOBAL RESET & BASE
+========================================================= */
 * {
   margin: 0;
   padding: 0;
@@ -7,16 +9,19 @@
 }
 
 body {
-  background: #f9fafb;
+  background: #f8fafc;
   color: #1f2937;
+  line-height: 1.5;
 }
 
-/* ================= NAVBAR ================= */
+/* =========================================================
+   NAVBAR
+========================================================= */
 .navbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 28px;
+  padding: 16px 28px;
   background: #ffffff;
   border-bottom: 1px solid #e5e7eb;
   position: sticky;
@@ -29,71 +34,55 @@ body {
 .nav-right {
   display: flex;
   align-items: center;
-  gap: 20px;
+  gap: 18px;
 }
 
-/* ================= LOGO ================= */
+/* =========================================================
+   LOGO (CLEAN + PREMIUM ANIMATION)
+========================================================= */
 .logo {
   font-size: 34px;
   font-weight: 800;
-  background: linear-gradient(90deg, #5f87d7);
+  background: linear-gradient(90deg, #4f46e5, #60a5fa);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   cursor: pointer;
 
-  animation: logoFloat 3s ease-in-out infinite;
-  transition: transform 0.35s ease, text-shadow 0.35s ease;
+  animation: logoFloat 1.5s ease-in-out infinite;
+  transition: transform 0.1s ease, filter 0.1s ease;
 }
 
 .logo:hover {
-  transform: scale(1.15) rotate(-1deg);
-  text-shadow: 0 0 22px rgba(79, 70, 229, 0.6);
+  transform: scale(1.08);
+  filter: drop-shadow(0 6px 12px rgba(79, 70, 229, 0.4));
 }
 
-/* Floating animation */
 @keyframes logoFloat {
   0% { transform: translateY(0); }
-  50% { transform: translateY(-5px); }
+  50% { transform: translateY(-4px); }
   100% { transform: translateY(0); }
 }
 
-/* ================= NAV LINKS ================= */
+/* =========================================================
+   NAV LINKS
+========================================================= */
 .nav-link {
   text-decoration: none;
   color: #374151;
   font-weight: 500;
   padding: 6px 12px;
-  border-radius: 6px;
+  border-radius: 8px;
   transition: background 0.25s ease, color 0.25s ease;
 }
 
 .nav-link:hover {
-  background: #e5e7eb;
-  color: #111827;
+  background: #eef2ff;
+  color: #1e3a8a;
 }
 
-/* ================= LOGOUT BUTTON ================= */
-.logout-btn {
-  background: #ef4444;
-  color: white;
-  border: none;
-  padding: 8px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: transform 0.25s ease, background 0.25s ease;
-}
-
-.logout-btn:hover {
-  background: #dc2626;
-  transform: scale(1.08);
-}
-
-/* ===== CREATE POST FORM GAP ===== */
-.crePost {
-  margin-top: 10px;   /* 👈 one clean line gap */
-}
-
-/* ================= CENTERED CONTAINER ================= */
+/* =========================================================
+   CENTER CONTAINER
+========================================================= */
 .container {
   min-height: calc(100vh - 80px);
   display: flex;
@@ -102,93 +91,104 @@ body {
   padding: 20px;
 }
 
-/* ================= CARD ================= */
+/* =========================================================
+   CARD (FORMS)
+========================================================= */
 .card {
   width: 100%;
   max-width: 480px;
   background: #ffffff;
-  border-radius: 14px;
-  padding: 26px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
 
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 16px;
 
-  animation: fadeIn 0.5s ease;
-  transition: transform 0.3s ease;
+  animation: fadeIn 0.45s ease;
 }
 
-.card:hover {
-  transform: translateY(-4px);
-}
-
-/* ================= CARD TITLE ================= */
 .card h2 {
   text-align: center;
   font-size: 26px;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
-/* ================= INPUTS ================= */
+/* =========================================================
+   INPUTS
+========================================================= */
 input,
-textarea {
+textarea,
+select {
   width: 100%;
-  padding: 12px;
-  border-radius: 8px;
+  padding: 12px 14px;
+  border-radius: 10px;
   border: 1px solid #d1d5db;
   font-size: 14px;
   transition: border 0.25s ease, box-shadow 0.25s ease;
 }
 
 input:focus,
-textarea:focus {
+textarea:focus,
+select:focus {
   outline: none;
   border-color: #4f46e5;
-  box-shadow: 0 0 0 2px rgba(79,70,229,0.2);
+  box-shadow: 0 0 0 3px rgba(79,70,229,0.18);
 }
 
 textarea {
-  min-height: 90px;
+  min-height: 100px;
   resize: vertical;
+}
+
+/* Clean spacing between CreatePost fields */
+.crePost {
+  margin-top: 10px;
 }
 
 /* File input */
 input[type="file"] {
-  padding: 8px;
-  border: 1px dashed #cbd5e1;
+  padding: 10px;
+  border: 2px dashed #c7d2fe;
   background: #f8fafc;
   cursor: pointer;
+  border-radius: 12px;
 }
 
-/* ================= BUTTONS ================= */
+/* =========================================================
+   BUTTONS
+========================================================= */
 button {
   background: #4f46e5;
   color: white;
   border: none;
   padding: 12px;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 15px;
+  font-weight: 500;
   cursor: pointer;
   transition: background 0.25s ease, transform 0.25s ease;
 }
 
 button:hover {
   background: #6366f1;
-  transform: scale(1.05);
+  transform: translateY(-2px);
 }
 
 button:disabled {
   background: #9ca3af;
   cursor: not-allowed;
+  transform: none;
 }
 
-/* ================= POSTS ================= */
+/* =========================================================
+   POSTS
+========================================================= */
 .posts-container {
   max-width: 900px;
   margin: 30px auto;
   padding: 20px;
-
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -196,14 +196,12 @@ button:disabled {
 
 .post-card {
   width: 100%;
-  max-width: 750px;
+  max-width: 760px;
   background: #ffffff;
-  border-radius: 14px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-
-
+  border-radius: 16px;
+  padding: 22px;
+  margin-bottom: 22px;
+  box-shadow: 0 10px 26px rgba(0,0,0,0.08);
   animation: fadeIn 0.4s ease;
 }
 
@@ -215,17 +213,14 @@ button:disabled {
   margin: 10px 0;
 }
 
-.post-card small {
-  color: #6b7280;
-}
-
-/* File / image */
+/* Images */
 .post-card img {
   width: 100%;
-  border-radius: 10px;
+  border-radius: 12px;
   margin-top: 12px;
 }
 
+/* Links */
 .post-card a {
   display: inline-block;
   margin-top: 10px;
@@ -238,118 +233,94 @@ button:disabled {
   text-decoration: underline;
 }
 
-/* ================= FILTER BAR ================= */
+/* =========================================================
+   FILTER BAR
+========================================================= */
 .filter-bar {
   width: 100%;
-  max-width: 750px;
+  max-width: 760px;
   display: flex;
   gap: 10px;
-  margin-bottom: 30px;
+  margin-bottom: 28px;
 }
 
-.filter-bar input {
-  flex: 1;
+.filter-select,
+.filter-input {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+  transition: all 0.25s ease;
 }
 
-.filter-bar button {
-  min-width: 90px;
+.filter-select:hover,
+.filter-input:hover {
+  border-color: #4f46e5;
+  background: #eef2ff;
 }
 
-/* ================= COMMENTS ================= */
+/* =========================================================
+   COMMENTS
+========================================================= */
 .comment-box {
   display: flex;
   gap: 10px;
-  margin-top: 12px;
+  margin-top: 14px;
 }
 
 .comment {
   margin-top: 6px;
-  padding-left: 8px;
-  border-left: 2px solid #e5e7eb;
+  padding-left: 10px;
+  border-left: 3px solid #e5e7eb;
   font-size: 14px;
   color: #374151;
   animation: slideUp 0.3s ease;
 }
 
-  .nav-center {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
- 
-  .post-card {
-    padding: 16px;
-  }
-
-  /* ======== VIDEO FIX ========== */
+/* =========================================================
+   VIDEO
+========================================================= */
 .video-wrapper {
   width: 100%;
-  max-width: 100%;
-  border-radius: 12px;
   margin-top: 12px;
+  border-radius: 14px;
   overflow: hidden;
   background: #000;
-  margin-bottom: 10px;
 }
 
 .video-wrapper video {
   width: 100%;
   height: auto;
-  max-height: 420px;
-  border-radius: 12px;
-  object-fit: contain;
   display: block;
 }
 
-/* Optional: TXT preview box */
-.text-preview-box {
-  background: #f7f7f7;
-  padding: 10px;
-  white-space: pre-wrap;
+/* =========================================================
+   DELETE BUTTON, DELETE ACCOUNT, LOGOUT
+========================================================= */
+ 
+.delete-account-btn, .delete-btn, .logout-btn {
+  background: #ff1e1e;
+  color: white;
+  padding: 8px 14px;
   border-radius: 8px;
-  margin-top: 8px;
+  border: none;
+  cursor: pointer;
+  margin-left: 10px;
+
+  transition: background 0.25s ease, transform 0.25s ease;
+}
+
+.delete-account-btn:hover, .delete-btn:hover, .logout-btn:hover  {
+  background: #fe0101;
+  transform: scale(1.05);
 }
 
 
-.filter-select, .filter-input {
-
-            padding: 10px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            background: white;
-            font-size:small;
-            transition: all 0.25s ease;
-          }
-
-          .filter-select:hover, .filter-input:hover {
-            border-color: #4f46e5;
-            background: #f3f4ff;
-          }
-
-          .filter-select:focus, .filter-input:focus {
-            outline: none;
-            border-color: #4f46e5;
-            box-shadow: 0 0 8px rgba(79,70,229,0.25);
-          }
-
-          .delete-btn {
-            background: #ef4444;
-            color: white;
-            margin-left: 12px;
-            padding: 10px 16px;
-            border-radius: 8px;
-            transition: 0.25s;
-          }
-
-          .delete-btn:hover {
-            background: #dc2626;
-            transform: scale(1.05);
-  }
-
-
-/* ================= ANIMATIONS ================= */
+/* =========================================================
+   ANIMATIONS
+========================================================= */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(14px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
@@ -358,11 +329,21 @@ button:disabled {
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* ================= RESPONSIVE ================= */
+/* =========================================================
+   RESPONSIVE
+========================================================= */
 @media (max-width: 768px) {
   .navbar {
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
   }
 
+  .nav-center {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .post-card {
+    padding: 18px;
+  }
 }

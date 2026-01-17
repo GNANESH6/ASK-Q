@@ -10,6 +10,7 @@ import ForgotPassword from "./pages/ForgotPassword";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Logout from "./pages/Logout";
+import DeleteAccount from "./pages/DeleteAccount";
 import CreatePost from "./pages/CreatePost";
 import Posts from "./pages/Posts";
 import Profile from "./pages/Profile";
@@ -39,15 +40,17 @@ function App() {
 
         {/* LEFT */}
         <div className="nav-left">
-          <Link to={user ? "/posts" : "/login"} className="logo">Q-Hive</Link>
+          <Link to={user ? "/posts" : "/login"} className="logo">
+            Q-Hive
+          </Link>
         </div>
 
         {/* CENTER */}
         <div className="nav-center">
           {user && (
             <>
-              <Link className="nav-link" to="/create">Create</Link>
-              <Link className="nav-link" to="/posts">Posts</Link>
+              <Link className="nav-link" to="/create">Create Post</Link>
+              <Link className="nav-link" to="/posts">View Posts</Link>
               <Link className="nav-link" to="/profile">Profile</Link>
             </>
           )}
@@ -61,7 +64,13 @@ function App() {
               <Link className="nav-link" to="/signup">Signup</Link>
             </>
           )}
-          {user && <Logout />}
+
+          {user && (
+            <>
+              <Logout />
+              <DeleteAccount />
+            </>
+          )}
         </div>
 
       </nav>
@@ -69,21 +78,18 @@ function App() {
       {/* ================= ROUTES ================= */}
       <Routes>
 
-        {/* Public Routes */}
+        {/* Public */}
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
 
-
-        {/* Default Route */}
+        {/* Default */}
         <Route
           path="/"
-          element={
-            user ? <Navigate to="/posts" /> : <Navigate to="/login" />
-          }
+          element={user ? <Navigate to="/posts" /> : <Navigate to="/login" />}
         />
 
-        {/* Protected Routes */}
+        {/* Protected */}
         <Route
           path="/create"
           element={
@@ -113,7 +119,7 @@ function App() {
 
       </Routes>
 
-      {/* ================= TOAST CONTAINER (must be inside App JSX) ================= */}
+      {/* ================= TOAST ================= */}
       <ToastContainer
         position="top-right"
         autoClose={2500}

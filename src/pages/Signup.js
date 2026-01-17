@@ -14,7 +14,7 @@ function Signup() {
     const year = Number(document.getElementById("year").value);
     const branch = document.getElementById("branch").value;
 
-    const emailPattern = /^[0-9]{3}g[0-9]a[0-9]{4}@srit\.ac\.in$/;
+    const emailPattern = /^[0-9]{3}g[0-9]a[0-9]{4,5}@srit\.ac\.in$/;
 
     if (!emailPattern.test(email)) {
       toast.error("Only SRIT college email allowed");
@@ -36,7 +36,7 @@ function Signup() {
       navigate("/create");
 
     } catch (error) {
-      toast.error(error.message);
+      toast.error("mail already in use");
     }
   };
 
