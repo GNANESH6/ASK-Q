@@ -48,7 +48,7 @@ function Signup() {
         <input id="name" placeholder="Name" />
         <input id="email" placeholder="College Email" />
         <input id="password" type="password" placeholder="Password" />
-        <input id="year" placeholder="Year" />
+        <input id="year" placeholder="Year of Study" />
         <input id="branch" placeholder="Branch" />
 
         <button onClick={handleSignup}>Signup</button>
