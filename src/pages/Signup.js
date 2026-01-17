@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { auth, db } from "../firebase";
@@ -7,19 +8,20 @@ import { toast } from "react-toastify";
 function Signup() {
   const navigate = useNavigate();
 
-  const handleSignup = async () => {
-    const name = document.getElementById("name").value.trim();
-    let email = document.getElementById("email").value.trim().toLowerCase();
-    const password = document.getElementById("password").value.trim();
-    const year = document.getElementById("year").value.trim();
-    const branch = document.getElementById("branch").value.trim();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [year, setYear] = useState("");
+  const [branch, setBranch] = useState("");
+  const [loading, setLoading] = useState(false);
 
+  const handleSignup = async () => {
     if (!name || !email || !password || !year || !branch) {
       toast.error("All fields are required");
       return;
     }
 
-    // Accept uppercase + lowercase + letters in roll no
+    // SRIT email validation (case-insensitive)
     const emailPattern = /^[0-9]{3}g[0-9]a[a-z0-9]{4,5}@srit\.ac\.in$/i;
 
     if (!emailPattern.test(email)) {
@@ -27,16 +29,21 @@ function Signup() {
       return;
     }
 
-    try {
-      const userCred = await createUserWithEmailAndPassword(auth, email, password);
+    setLoading(true);
 
-      // Store lowercase email always
+    try {
+      const userCred = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
       await setDoc(doc(db, "users", userCred.user.uid), {
-        email: email,
         name,
+        email, // already lowercase
         year: Number(year),
         branch,
-        createdAt: serverTimestamp()
+        createdAt: serverTimestamp(),
       });
 
       toast.success("Signup successful 🎉");
@@ -44,6 +51,8 @@ function Signup() {
     } catch (error) {
       toast.error("Mail already in use");
     }
+
+    setLoading(false);
   };
 
   return (
@@ -51,20 +60,41 @@ function Signup() {
       <div className="card">
         <h2>Signup</h2>
 
-        <input id="name" required placeholder="Name" />
-
         <input
-          id="email"
-          required
-          placeholder="College Email"
-          onChange={(e) => (e.target.value = e.target.value.toLowerCase())}
+          placeholder="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
         />
 
-        <input id="password" required type="password" placeholder="Password" />
-        <input id="year" required placeholder="Year of Study" />
-        <input id="branch" required placeholder="Branch" />
+        <input
+          type="email"
+          placeholder="College Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value.toLowerCase())}
+        />
 
-        <button onClick={handleSignup}>Signup</button>
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+
+        <input
+          placeholder="Year of Study"
+          value={year}
+          onChange={(e) => setYear(e.target.value)}
+        />
+
+        <input
+          placeholder="Branch"
+          value={branch}
+          onChange={(e) => setBranch(e.target.value)}
+        />
+
+        <button onClick={handleSignup} disabled={loading}>
+          {loading ? "Signing up..." : "Signup"}
+        </button>
       </div>
     </div>
   );
